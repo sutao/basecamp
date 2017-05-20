@@ -1,25 +1,17 @@
-# file: rfcomm-server.py
-# auth: Albert Huang <albert@csail.mit.edu>
-# desc: simple demonstration of a server application that uses RFCOMM sockets
-#
-# $Id: rfcomm-server.py 518 2007-08-10 07:20:07Z albert $
+import bluetooth as bt
 
-from bluetooth import *
-
-server_sock=BluetoothSocket( RFCOMM )
-server_sock.bind(("",PORT_ANY))
+server_sock=bt.BluetoothSocket(bt.RFCOMM)
+server_sock.bind(("",bt.PORT_ANY))
 server_sock.listen(1)
 
 port = server_sock.getsockname()[1]
 
-uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+uuid = "1fab9d30-2a09-4331-b347-b2c4b5bcf302"
 
-advertise_service( server_sock, "SampleServer",
-                   service_id = uuid,
-                   service_classes = [ uuid, SERIAL_PORT_CLASS ],
-                   profiles = [ SERIAL_PORT_PROFILE ], 
-#                   protocols = [ OBEX_UUID ] 
-                    )
+bt.advertise_service(server_sock, "Basecamp",
+                     service_id = uuid,
+                     service_classes = [uuid, bt.SERIAL_PORT_CLASS],
+                     profiles = [ bt.SERIAL_PORT_PROFILE ])
                    
 print("Waiting for connection on RFCOMM channel %d" % port)
 
