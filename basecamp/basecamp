@@ -1,5 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
+import time
 import bt_server
 
 def bt_callback(client_sock, client_info):
@@ -8,6 +9,8 @@ def bt_callback(client_sock, client_info):
 def main():
     bts = bt_server.BasecampBluetoothServer(bt_callback,)
     bts.start()
+    while True:
+        time.sleep(1)
 
 
 if __name__ == '__main__':
