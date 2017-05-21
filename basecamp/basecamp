@@ -10,7 +10,7 @@ def main():
     bts = bt_server.BasecampBluetoothServer(bt_callback,)
     bts.start()
     while True:
-        time.sleep(1)
+        time.sleep(0.01)
 
 
 if __name__ == '__main__':
