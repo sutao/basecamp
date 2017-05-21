@@ -1,17 +1,19 @@
 Basecamp
 --------
 
+Preparation
+===========
 ```sh
 sudo apt-get install python-dbus
-# sudo apt-get install python-dev libbluetooth-dev libglib2.0-dev libboost-python-dev
 sudo pip install virtualenv
 make venv
 source env/bin/activate
 make install
 ```
 
-# To prepare the system:
-
-# To add Serial Port Profile:
-# Change `/etc/systemd/system/dbus-org.bluez.service` and add `-C` after `bluetoothd` and reboot.
-# Run `sudo sdptool add SP`.
+References
+==========
+* https://tobiastrumm.de/2016/10/04/turning-a-raspberry-pi-3-into-a-bluetooth-low-energy-peripheral/
+* https://github.com/WIStudent/Bluetooth-Low-Energy-LED-Matrix
+* https://github.com/WIStudent/Bluetooth-LED-Matrix-App
+* https://github.com/comarius/bunget
