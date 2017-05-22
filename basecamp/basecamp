@@ -12,12 +12,13 @@ stop_event = threading.Event()
 def sigint_handler(signum, frame):
     stop_event.set()
 
-signal.signal(signal.SIGINT, sigint_handler)
-
 
 def main():
     wwd = WifiWizardDaemon()
-    wwd.start()
+    print "Staring BLE service:", wwd.start()
+
+    # Set signal handler here so it does not get overriden by GTK.
+    signal.signal(signal.SIGINT, sigint_handler)
     while not stop_event.is_set():
         time.sleep(0.01)
 

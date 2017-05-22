@@ -1,6 +1,7 @@
 import ble_wifi
 import subprocess
 import threading
+import time
 
 WPA_FILE = '/tmp/wpa.conf'
 INTERFACE = 'wlan0'
@@ -56,4 +57,15 @@ class WifiWizardDaemon(object):
         self.ble_thread = threading.Thread(target=self.ble.serve)
         self.ble_thread.daemon = True
         self.ble_thread.start()
-        print "BLE thread started"
+
+        check_timeout_ms = 5000
+        while check_timeout_ms > 0 and (self.ble.mainloop is None or self.ble.mainloop.is_running()):
+            time.sleep(0.01)
+            check_timeout_ms -= 10
+
+        if check_timeout_ms > 0:
+            print "BLE thread started"
+            return True
+        else:
+            print "BLE start timeout"
+            return False
