@@ -80,14 +80,14 @@ class BasecampWifiBLE(object):
         """
         Callback if registering advertisement was successful
         """
-        print('Advertisement registered')
+        print('[BLE] Advertisement registered')
 
 
     def register_ad_error_cb(self, error):
         """
         Callback if registering advertisement failed
         """
-        print('Failed to register advertisement: ' + str(error))
+        print('[BLE] Failed to register advertisement: ' + str(error))
         self.mainloop.quit()
 
 
@@ -95,14 +95,14 @@ class BasecampWifiBLE(object):
         """
         Callback if registering GATT application was successful
         """
-        print('GATT application registered')
+        print('[BLE] GATT application registered')
 
 
     def register_app_error_cb(self, error):
         """
         Callback if registering GATT application failed.
         """
-        print('Failed to register application: ' + str(error))
+        print('[BLE] Failed to register application: ' + str(error))
         self.mainloop.quit()
 
     def serve(self):
