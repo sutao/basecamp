@@ -17,7 +17,7 @@ import ble_bluez_rpi3 as ble
 
 
 class WifiConnectionChrc(ble.Characteristic):
-    UUID = '8b3db1a6-cd57-4f57-af04-c818612f8fc3'
+    UUID = '081403ad-8c87-4f72-a4db-05b260da0010'
 
     def __init__(self, bus, index, service):
         super(WifiConnectionChrc, self).__init__(
@@ -33,7 +33,7 @@ class WifiConnectionChrc(ble.Characteristic):
 
 
 class WifiStatusChrc(ble.Characteristic):
-    UUID = '9c8af7ec-9a45-4ea4-a1bd-e8e2ced01c87'
+    UUID = '081403ad-8c87-4f72-a4db-05b260da0020'
 
     def __init__(self, bus, index, service):
         super(WifiStatusChrc, self).__init__(
@@ -44,7 +44,7 @@ class WifiStatusChrc(ble.Characteristic):
 
 
 class DeviceStatusChrc(ble.Characteristic):
-    UUID = '3b6bb4ea-347c-4cc5-a133-ffb8841b9ef6'
+    UUID = '081403ad-8c87-4f72-a4db-05b260da0030'
 
     def __init__(self, bus, index, service):
         super(DeviceStatusChrc, self).__init__(
@@ -55,7 +55,7 @@ class DeviceStatusChrc(ble.Characteristic):
 
 
 class BasecampService(ble.Service):
-    UUID = '081403ad-8c87-4f72-a4db-05b260da4b8a'
+    UUID = '081403ad-8c87-4f72-a4db-05b260da0000'
 
     def __init__(self, bus, index):
         super(BasecampService, self).__init__(bus, index, self.UUID, True)
