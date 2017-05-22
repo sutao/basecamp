@@ -30,8 +30,7 @@ class WifiWizardDaemon(object):
         f.close()
 
         # Attempt to connect
-        self.__cmd('sudo wpa_supplicant -i{} -c{} -B'.format(INTERFACE, WPA_FILE)
-
+        self.__cmd('sudo wpa_supplicant -i{} -c{} -B'.format(INTERFACE, WPA_FILE))
 
     def read_status(self):
         # get interface status
