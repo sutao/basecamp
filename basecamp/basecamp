@@ -1,13 +1,24 @@
 #!/usr/bin/env python
 
 import time
-from bc_wifi import WifiWizardDaemon
+import signal
+import threading
+from wifi_wizard_daemon import WifiWizardDaemon
+
+
+stop_event = threading.Event()
+
+
+def sigint_handler(signum, frame):
+    stop_event.set()
+
+signal.signal(signal.SIGINT, sigint_handler)
 
 
 def main():
     wwd = WifiWizardDaemon()
     wwd.start()
-    while True:
+    while not stop_event.is_set():
         time.sleep(0.01)
 
 
