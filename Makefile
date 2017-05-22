@@ -5,6 +5,6 @@ install:
 	pip install -r requirements.txt
 
 venv:
-	rm -rf env && mkdir env && virtualenv env
+	rm -rf env && mkdir env && virtualenv --system-site-packages env
 
 .PHONY: install run venv
