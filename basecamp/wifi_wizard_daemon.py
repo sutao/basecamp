@@ -59,7 +59,7 @@ class WifiWizardDaemon(object):
         self.ble_thread.start()
 
         check_timeout_ms = 5000
-        while check_timeout_ms > 0 and (self.ble.mainloop is None or self.ble.mainloop.is_running()):
+        while check_timeout_ms > 0 and (self.ble.mainloop is None or not self.ble.mainloop.is_running()):
             time.sleep(0.01)
             check_timeout_ms -= 10
 
