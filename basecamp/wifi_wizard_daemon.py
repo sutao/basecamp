@@ -13,13 +13,14 @@ class WifiWizardDaemon(object):
         self.ble_thread = None
 
     def __cmd(self, cmd):
+        print('[WWD] Execute command: {}'.format(cmd))
         return subprocess.Popen(
             cmd, shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         ).stdout.read().decode()
 
     def try_connect(self, ssid, password):
-        print "Try to connec to wifi, SSID:", ssid
+        print('[WWD] Try to connect to wifi, SSID: {}'.format(ssid))
 
         # Stop all previous attemps
         self.__cmd('sudo killall wpa_supplicant')
@@ -47,7 +48,7 @@ class WifiWizardDaemon(object):
                 if network != 'off/any':
                     networks.append(network)
 
-        print "Wifi status query:", networks
+        print('[WWD] Wifi status query: {}'.format(networks))
         return networks
 
     def start(self):
@@ -64,8 +65,8 @@ class WifiWizardDaemon(object):
             check_timeout_ms -= 10
 
         if check_timeout_ms > 0:
-            print "BLE thread started"
+            print('[WWD] BLE thread started')
             return True
         else:
-            print "BLE start timeout"
+            print('[WWD] BLE start timeout')
             return False

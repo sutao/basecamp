@@ -27,6 +27,7 @@ class WifiTryConnectChrc(ble.Characteristic):
 
     def WriteValue(self, value, options):
         # Try to connect
+        print('[BLE] WifiTryConnectChrc WRITE: {}'.format(value))
         ssid, password = value.split(':')
         try:
             ssid = base64.b64decode(ssid)
@@ -45,6 +46,7 @@ class WifiStatusChrc(ble.Characteristic):
 
     def ReadValue(self, options):
         status = base64.b64encode(json.dumps(self.service.wifi_wizard.read_status()))
+        print('[BLE] WifiStatusChrc READ: {}'.format(status))
         return status
 
 

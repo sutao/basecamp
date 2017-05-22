@@ -15,7 +15,7 @@ def sigint_handler(signum, frame):
 
 def main():
     wwd = WifiWizardDaemon()
-    print "Staring BLE service..."
+    print('Staring BLE service...')
     wwd.start()
 
     # Set signal handler here so it does not get overriden by GTK.
