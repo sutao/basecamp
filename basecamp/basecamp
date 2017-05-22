@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 import time
-import ble_basecamp
+from bc_wifi import WifiWizardDaemon
 
 
 def main():
-    ble = ble_basecamp.BasecampBLE()
-    ble.serve()
+    wwd = WifiWizardDaemon()
+    wwd.start()
+    while True:
+        time.sleep(0.01)
 
 
 if __name__ == '__main__':

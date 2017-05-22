@@ -7,6 +7,8 @@ https://github.com/WIStudent/Bluetooth-LED-Matrix-App
 
 import dbus
 import dbus.mainloop.glib
+import base64
+import json
 
 try:
     from gi.repository import GObject
@@ -16,20 +18,22 @@ except ImportError:
 import ble_bluez_rpi3 as ble
 
 
-class WifiConnectionChrc(ble.Characteristic):
+class WifiTryConnectChrc(ble.Characteristic):
     UUID = '081403ad-8c87-4f72-a4db-05b260da0010'
 
     def __init__(self, bus, index, service):
-        super(WifiConnectionChrc, self).__init__(
-            bus, index, self.UUID, ['read', 'write'], service)
-        self.value = ''
-
-    def ReadValue(self, options):
-        return self.value
+        super(WifiTryConnectChrc, self).__init__(
+            bus, index, self.UUID, ['write'], service)
 
     def WriteValue(self, value, options):
         # Try to connect
-        self.value = value
+        ssid, password = value.split(':')
+        try:
+            ssid = base64.b64decode(ssid)
+            password = base64.b64decode(password)
+        except TypeError:
+            pass
+        self.service.wifi_wizard.try_connect(ssid, password)
 
 
 class WifiStatusChrc(ble.Characteristic):
@@ -40,46 +44,37 @@ class WifiStatusChrc(ble.Characteristic):
             bus, index, self.UUID, ['read'], service)
 
     def ReadValue(self, options):
-        return 'unknown'
+        status = base64.b64encode(json.dumps(self.service.wifi_wizard.read_status()))
+        return status
 
 
-class DeviceStatusChrc(ble.Characteristic):
-    UUID = '081403ad-8c87-4f72-a4db-05b260da0030'
-
-    def __init__(self, bus, index, service):
-        super(DeviceStatusChrc, self).__init__(
-            bus, index, DeviceStatusChrc.UUID, ['read'], service)
-
-    def ReadValue(self, options):
-        return 'unknown'
-
-
-class BasecampService(ble.Service):
+class BasecampWifiService(ble.Service):
     UUID = '081403ad-8c87-4f72-a4db-05b260da0000'
 
+    def __init__(self, bus, index, wifi_wizard):
+        super(BasecampWifiService, self).__init__(bus, index, self.UUID, True)
+        self.add_characteristic(WifiStatusChrc(bus, 0, self))
+        self.add_characteristic(WifiTryConnectChrc(bus, 1, self))
+        self.wifi_wizard = wifi_wizard
+
+
+class BasecampWifiApplication(ble.Application):
+    def __init__(self, bus, wifi_wizard):
+        super(BasecampWifiApplication, self).__init__(bus)
+        self.add_service(BasecampWifiService(bus, 0, wifi_wizard))
+
+
+class BasecampWifiAdvertisement(ble.Advertisement):
     def __init__(self, bus, index):
-        super(BasecampService, self).__init__(bus, index, self.UUID, True)
-        self.add_characteristic(DeviceStatusChrc(bus, 0, self))
-        self.add_characteristic(WifiStatusChrc(bus, 1, self))
-        self.add_characteristic(WifiConnectionChrc(bus, 2, self))
-
-
-class BasecampApplication(ble.Application):
-    def __init__(self, bus):
-        super(BasecampApplication, self).__init__(bus)
-        self.add_service(BasecampService(bus, 0))
-
-
-class BasecampAdvertisement(ble.Advertisement):
-    def __init__(self, bus, index):
-        super(BasecampAdvertisement, self).__init__(bus, index, 'peripheral')
-        self.add_service_uuid(BasecampService.UUID)
+        super(BasecampWifiAdvertisement, self).__init__(bus, index, 'peripheral')
+        self.add_service_uuid(BasecampWifiService.UUID)
         self.include_tx_power = True
 
 
-class BasecampBLE(object):
-    def __init__(self):
+class BasecampWifiBLE(object):
+    def __init__(self, wifi_wizard):
         self.mainloop = None
+        self.wifi_wizard = wifi_wizard
 
     def register_ad_cb(self):
         """
@@ -120,10 +115,10 @@ class BasecampBLE(object):
         ad_manager = ble.get_ad_manager(bus)
 
         # Create gatt services
-        app = BasecampApplication(bus)
+        app = BasecampWifiApplication(bus, self.wifi_wizard)
 
         # Create advertisement
-        test_advertisement = BasecampAdvertisement(bus, 0)
+        test_advertisement = BasecampWifiAdvertisement(bus, 0)
 
         self.mainloop = GObject.MainLoop()
 

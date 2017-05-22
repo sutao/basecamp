@@ -64,7 +64,7 @@ class Application(dbus.service.Object):
     @dbus.service.method(DBUS_OM_IFACE, out_signature='a{oa{sa{sv}}}')
     def GetManagedObjects(self):
         response = {}
-        print('GetManagedObjects')
+        print('[BLE] GetManagedObjects')
 
         for service in self.services:
             response[service.get_path()] = service.get_properties()
@@ -175,22 +175,22 @@ class Characteristic(dbus.service.Object):
                          in_signature='a{sv}',
                          out_signature='ay')
     def ReadValue(self, options):
-        print('Default ReadValue called, returning error')
+        print('[BLE] Default ReadValue called, returning error')
         raise NotSupportedException()
 
     @dbus.service.method(GATT_CHRC_IFACE, in_signature='aya{sv}')
     def WriteValue(self, value, options):
-        print('Default WriteValue called, returning error')
+        print('[BLE] Default WriteValue called, returning error')
         raise NotSupportedException()
 
     @dbus.service.method(GATT_CHRC_IFACE)
     def StartNotify(self):
-        print('Default StartNotify called, returning error')
+        print('[BLE] Default StartNotify called, returning error')
         raise NotSupportedException()
 
     @dbus.service.method(GATT_CHRC_IFACE)
     def StopNotify(self):
-        print('Default StopNotify called, returning error')
+        print('[BLE] Default StopNotify called, returning error')
         raise NotSupportedException()
 
     @dbus.service.signal(DBUS_PROP_IFACE,
@@ -233,12 +233,12 @@ class Descriptor(dbus.service.Object):
                          in_signature='a{sv}',
                          out_signature='ay')
     def ReadValue(self, options):
-        print('Default ReadValue called, returning error')
+        print('[BLE] Default ReadValue called, returning error')
         raise NotSupportedException()
 
     @dbus.service.method(GATT_DESC_IFACE, in_signature='aya{sv}')
     def WriteValue(self, value, options):
-        print('Default WriteValue called, returning error')
+        print('[BLE] Default WriteValue called, returning error')
         raise NotSupportedException()
 
 
@@ -302,17 +302,17 @@ class Advertisement(dbus.service.Object):
                          in_signature='s',
                          out_signature='a{sv}')
     def GetAll(self, interface):
-        print('GetAll')
+        print('[BLE] GetAll')
         if interface != LE_ADVERTISEMENT_IFACE:
             raise InvalidArgsException()
-        print('returning props')
+        print('[BLE] Returning props')
         return self.get_properties()[LE_ADVERTISEMENT_IFACE]
 
     @dbus.service.method(LE_ADVERTISEMENT_IFACE,
                          in_signature='',
                          out_signature='')
     def Release(self):
-        print('%s: Released!' % self.path)
+        print('[BLE] %s: Released!' % self.path)
 
 
 def find_adapter_gattmanager(bus):
@@ -343,7 +343,7 @@ def get_service_manager(bus):
     # Get the GattManager
     adapter_gattmanager = find_adapter_gattmanager(bus)
     if not adapter_gattmanager:
-        print('GattManager1 interface not found')
+        print('[BLE] GattManager1 interface not found')
         return
 
     service_manager = dbus.Interface(
@@ -357,7 +357,7 @@ def get_ad_manager(bus):
     # Get the AdapterManager
     adapter_advertisingmanager = find_adapter_advertisingmanager(bus)
     if not adapter_advertisingmanager:
-        print('LEAdvertisingManager1 interface not found')
+        print('[BLE] LEAdvertisingManager1 interface not found')
         return
 
     adapter_props = dbus.Interface(bus.get_object(BLUEZ_SERVICE_NAME, adapter_advertisingmanager),
